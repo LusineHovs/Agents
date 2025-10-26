@@ -38,7 +38,6 @@ agent = create_agent(model=llm, tools=tools, system_prompt=react_prompt.template
 chain = agent
 
 def main():
-    print("Hello from langchain-course!")
     result = chain.invoke({"messages": [{"role": "user", "content": "Search for job positions for an ai engineer using langchain in the bay area on linkedin and list their details"}]})
     print(result)
 
