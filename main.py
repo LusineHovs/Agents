@@ -55,10 +55,10 @@ prompt = PromptTemplate.from_template(template).partial(
 llm = ChatOllama(model="llama3.2", temperature=0, model_kwargs={"stop":["\nObservation:"]})
 agent = {"input": lambda x: x["input"]} | prompt | llm | StrOutputParser()
 
-agent_step: Union[AgentAction, AgentFinish] = agent.invoke({"input": "What is the length of the string DOG?"})
+agent_step: Union[AgentAction, AgentFinish] = agent.invoke({"input": "What is the length of the string OBSERVATION?"})
 print(agent_step)
 
-if isinstance(agent_step, AgentAction):
+if isinstance(agent_step, AgentAction): 
     tool_name = agent_step.tool
     tool_to_use = find_tool_by_name(tools,tool_name)
     tool_input = agent_step.tool_input
