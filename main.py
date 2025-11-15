@@ -45,7 +45,7 @@ Final Answer: the final answer to the original input question
 Begin!
 
 Question: {input}
-Thought:
+Thought: {agent_scratchpad}
 """
 # prompt = PromptTemplate(template=template, input_variables=["input", "tools", "tool_names"])
 prompt = PromptTemplate.from_template(template).partial(
@@ -53,9 +53,19 @@ prompt = PromptTemplate.from_template(template).partial(
     tool_names=", ".join([t.name for t in tools]))
 
 llm = ChatOllama(model="llama3.2", temperature=0, model_kwargs={"stop":["\nObservation:"]})
-agent = {"input": lambda x: x["input"]} | prompt | llm | StrOutputParser()
 
-agent_step: Union[AgentAction, AgentFinish] = agent.invoke({"input": "What is the length of the string OBSERVATION?"})
+agent = (
+    {
+        "input": lambda x: x["input"], 
+        "agent_scratchpad": lambda x: x["agent_scratchpad"]
+   }
+   | prompt 
+   | llm 
+   | StrOutputParser()
+)
+agent_step: Union[AgentAction, AgentFinish] = agent.invoke(
+    {"input": "What is the length of the string OBSERVATION?"}
+)
 print(agent_step)
 
 if isinstance(agent_step, AgentAction): 
